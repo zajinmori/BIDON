@@ -1,0 +1,122 @@
+/* 기본 레이아웃 설정 */
+.dashboard-data {
+    min-height: 600px;
+    height: auto;
+    width: 100%;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+.content-section {
+    min-height: 500px;
+    width: 100%;
+}
+
+/* 폼 스타일링 */
+.form-control {
+    width: 300px;
+    height: 50px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    column-gap: 100px;
+}
+
+/* 프로필 섹션 */
+#profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#userEditForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#editUser {
+    margin-left: auto;
+    align-self: flex-end;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#userEdittool > h4 {
+    text-align: center;
+    font-weight: bolder;
+}
+
+/* 파일 업로드 input 스타일링 */
+.form-control[type="file"] {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    height: auto;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.form-control[type="file"]::file-selector-button {
+    height: 36px;
+    margin: 0 20px 0 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 프로필 이미지 및 정보 */
+.dashboard-avatar {
+    width: 100px;
+    height: 100px;
+}
+
+#profileinfo {
+    text-align: left;
+}
+
+#profileinfo > div {
+    margin-top: 50px;
+}
+
+/* 테이블 스타일링 */
+.table-responsive {
+    min-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* 스크롤바 숨기기 */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.table-responsive::-webkit-scrollbar {
+    display: none;
+}
+
+.table td, .table th {
+    padding: 8px;
+    vertical-align: middle;
+}
+
+/* 반응형 설정 */
+@media screen and (max-width: 768px) {
+    .dashboard-data {
+        padding: 10px;
+    }
+
+    .table {
+        white-space: nowrap;
+        font-size: 14px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr; /* 작은 화면에서는 한 열로 변경 */
+        gap: 15px;
+    }
+
+    .form-control {
+        width: 100%; /* 작은 화면에서는 전체 너비 사용 */
+    }
+}

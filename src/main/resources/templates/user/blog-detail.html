@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{user/inc/head.html :: head(title='리뷰 상세')}"></th:block>
+</head>
+<body>
+<th:block th:replace="~{user/inc/header.html :: header}"></th:block>
+
+<main id="main-content" class="position-relative">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-8">
+                <div class="single-blog">
+                    
+					<div id="hardcoded-photo-container">
+					    <!-- 하드코딩된 사진 출력 -->
+					    <img th:each="path : ${hardcodedPaths}" th:src="${path}" alt="Review Photo" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+					</div>
+
+
+                    <div class="single-blog-content py-3 py-md-4">
+                        <h3 th:text="${review.title}">게시글 제목</h3>
+                        <p th:text="${review.contents}">게시글 내용</p>
+                    </div>
+                </div>
+                
+                <!-- 댓글 폼 -->
+                <div class="card-wrapper">
+                    <h5 class="mb-4">댓글을 남겨보세요!</h5>
+                    <form th:action="@{/review/comment}" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>이름*</label>
+                                    <input type="text" name="name" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email*</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>답장*</label>
+                                    <textarea name="message" class="form-control" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="primary-btn btn-light" type="submit">제출하기</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+    <div class="card-wrapper mb-3">
+        <h5 th:text="${#temporals.format(review.regdate, 'yyyy-MM-dd')}">작성일자</h5>
+        <hr>
+        <h5>조회수: <span th:text="${review.views}">0</span></h5>
+        <hr>
+        <h5>해시태그</h5>
+        <div class="d-flex flex-wrap gap-2">
+            <!-- <th:block th:if="${not #lists.isEmpty(hashtagRepository.findHashtagsByReviewBoardId(review.id))}">
+                <span th:each="tag : ${review.hashTags}" 
+                      class="badge text-bg-primary" 
+                      th:text="${tag}">
+                    해시태그
+                </span>
+			</th:block>
+            <th:block th:unless="${review.hashTags != null and !review.hashTags.isEmpty()}">
+                <span class="text-muted">해시태그 없음</span>
+            </th:block>
+            </th:block> -->
+            <th:block th:if="${not #lists.isEmpty(hashTags)}">
+			    <span th:each="tag : ${hashTags}" 
+			          class="badge text-bg-primary" 
+			          th:text="${tag}">
+			        해시태그
+			    </span>
+			</th:block>
+			<th:block th:unless="${not #lists.isEmpty(hashTags)}">
+			    <span class="text-muted">해시태그 없음</span>
+			</th:block>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</main>
+
+<th:block th:replace="~{user/inc/footer.html :: footer}"></th:block>
+<th:block th:replace="~{user/inc/scripts.html :: scripts(jquery=true, bootstrap=true, custom=true)}"></th:block>
+
+
+</body>
+
+</html>

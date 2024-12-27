@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html 
+xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+	<th:block th:insert="~{admin/inc/head.html :: head}"></th:block>
+</head>
+<body>
+  <div class="container-scroller"> 
+    <!-- partial:partials/_navbar.html -->
+    <!-- 상단 로고 및 프로필바 -->
+    <th:block th:insert="~{admin/inc/navbar.html :: navbar}"></th:block>
+    
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+      <th:block th:insert="~{admin/inc/settings-panel.html :: settings-panel}"></th:block>
+
+
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+      <!-- 사이드 바 -->
+    <th:block th:insert="~{admin/inc/sidebar.html :: sidebar}"></th:block>
+
+
+	<!--
+		
+		class="text-danger"(빨강)
+		class="text-success"(초록)
+		info(파랑)
+		warning(노랑)
+
+	-->
+	
+	
+	
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+			
+			<div class="col-lg-6 grid-margin stretch-card">
+			  <div class="card">
+			    <div class="card-body">
+			      <h4 class="card-title"><a href="/browse-bid">일반 경매</a></h4>
+			      <p class="card-description">
+			        <code>.normal</code>
+			      </p>
+			      <div class="table-responsive">
+			        <table class="table">
+			          <thead>
+			            <tr>
+			              <th>물품</th>
+			              <th>시작 시간</th>
+			              <th>시작가</th>
+			              <th></th>
+			            </tr>
+			          </thead>
+					  <tbody>
+					      <tr th:each="dto : ${normalList}">
+					          <!-- 경매 시작 전에는 링크 비활성화, 시작 후에는 활성화 -->
+					          <td>
+					              <a th:href="@{${dto.startTime} > ${currentTime} ? '#': '/bid-detail/' + ${dto.id}}"
+					                 th:text="${dto.name}"
+					                 th:classappend="${dto.startTime > currentTime ? 'disabled' : ''}">
+					              </a>
+					          </td>
+					          <td th:text="${#temporals.format(dto.startTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+					          <td th:text="${dto.startPrice}">시작가</td>
+					          <td>
+					              <span class="badge"
+					                    th:text="${dto.statusNormal}"
+					                    th:classappend="${dto.statusNormal == '경매대기' ? 'badge-warning' : (dto.statusNormal == '경매진행' ? 'badge-success' : 'badge-danger')}">
+					              </span>
+					          </td>
+					      </tr>
+					  </tbody>
+			        </table>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+            <div class="col-lg-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">진행중인 경매</h4>
+                  <p class="card-description">
+                    <code>.normal</code>
+                  </p>
+                  <div class="table-responsive mt-1">
+                    <table class="table select-table">
+                      <thead>
+                        <tr>
+                          <th>판매자</th>
+                          <th>물품</th>
+                          <th>시작 시간</th>
+                          <th>종료 시간</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr th:each="dto : ${normalProgressList}">
+						 <td>
+		                    <h6 th:text="${dto.userInfo.name}"></h6>
+		                    <p th:text="${dto.userInfo.email}"></p>
+			              </td>
+			              <td>
+			                <h6 th:text="${dto.name}"></h6>
+			              </td>
+			              <td>
+			                <div>
+			                  <div class="d-flex justify-content-between align-items-center mb-1 max-width-progress-wrap">
+			                    <p class="text-danger" th:text="${#temporals.format(dto.startTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+			                  </div>
+			                </div>
+			              </td>
+						  <td>
+  			                <div>
+  			                  <div class="d-flex justify-content-between align-items-center mb-1 max-width-progress-wrap">
+  			                    <p class="text-danger" th:text="${#temporals.format(dto.endTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+  			                  </div>
+  			                </div>
+  			              </td>
+						</tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+			<div class="col-lg-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title"><a href= "/browse-live-bid">실시간 경매</a></h4>
+                  <p class="card-description">
+                     <code>.live</code>
+                  </p>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>물품</th>
+                          <th>시작 시간</th>
+                          <th>시작가</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr th:each="dto : ${liveList}">
+						  <td><a th:href="@{'/live-auction/detail?itemId=' + ${dto.id}}" th:text="${dto.name}"></a></td>
+                          <td th:text="${#temporals.format(dto.startTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                          <td th:text="${dto.startPrice}"></td>
+						  <td>
+							<span class="badge"
+				              th:text="${dto.status}"
+				              th:classappend="${dto.status == '경매대기' ? 'badge-warning' : (dto.status == '경매진행' ? 'badge-success' : 'badge-danger')}">
+							   </span>
+						     </td>
+						  </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+			<div class="col-lg-6 grid-margin stretch-card">
+			  <div class="card">
+			    <div class="card-body">
+			      <h4 class="card-title">진행중인 경매</h4>
+			      <p class="card-description">
+			        <code>.live</code>
+			      </p>
+			      <div class="table-responsive mt-1">
+			        <table class="table select-table">
+			          <thead>
+			            <tr>
+			              <th>판매자</th>
+			              <th>물품</th>
+			              <th>시작 시간</th>
+			              <th></th>
+			            </tr>
+			          </thead>
+			          <tbody>
+			            <tr th:each="dto : ${progressList}">
+			              <td>
+		                    <h6 th:text="${dto.userInfo.name}"></h6>
+		                    <p th:text="${dto.userInfo.email}"></p>
+			              </td>
+			              <td>
+			                <h6 th:text="${dto.name}"></h6>
+			              </td>
+			              <td>
+			                <div>
+			                  <div class="d-flex justify-content-between align-items-center mb-1 max-width-progress-wrap">
+			                    <p class="text-danger" th:text="${#temporals.format(dto.startTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+			                  </div>
+			                </div>
+			              </td>
+						  <td><a th:href="@{'/live-auction/bid-room?itemId=' + ${dto.id}}" class="badge badge-opacity-warning">참여</a></td>
+			            </tr>
+			          </tbody>
+			        </table>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">경매품 등록 현황</h4>
+                  <p class="card-description">
+                    <code>.Today item</code>
+                  </p>
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>
+                            판매자
+                          </th>
+                          <th>
+                            등록 물품
+                          </th>
+                          <th>
+                            경매 종류
+                          </th>
+                          <th>
+                            경매 금액
+                          </th>
+                          <th>
+                            경매 예정일
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+						<tr th:each="dto : ${todayNormalList}">
+						  <td th:text="${dto.userInfo != null ? dto.userInfo.name : '알 수 없음'}"></td>
+						  <!--일반경매 주소 나오면 경로 수정하기-->
+						  <!--<td><a th:href="@{/bid-detail/{id}(id=${dto.id})}" th:text="${dto.name}"></a></td>-->
+						  <td>
+				              <a th:href="@{${dto.startTime} > ${currentTime} ? '#': '/bid-detail/' + ${dto.id}}"
+				                 th:text="${dto.name}"
+				                 th:classappend="${dto.startTime > currentTime ? 'disabled' : ''}">
+				              </a>
+				          </td>
+						  <td>일반 경매</td>
+						  <td th:text="${dto.startPrice}">경매 금액</td>
+						  <td th:text="${#temporals.format(dto.startTime, 'yyyy-MM-dd HH:mm:ss')}">경매 예정일</td>
+						</tr>
+						<tr th:each="dto : ${todayLiveList}">
+						  <td th:text="${dto.userInfo != null ? dto.userInfo.name : '알 수 없음'}"></td>
+						  <td><a th:href="@{'/live-auction/detail?itemId=' + ${dto.id}}" th:text="${dto.name}"></a></td>
+						  <td>실시간 경매</td>
+						  <td th:text="${dto.startPrice}">경매 금액</td>
+						  <td th:text="${#temporals.format(dto.startTime, 'yyyy-MM-dd HH:mm:ss')}">경매 예정일</td>
+						</tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">회원 관심 경매품</h4>
+                  <p class="card-description">
+                   <code>.One month</code>
+                  </p>
+                  <div class="table-responsive pt-3">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr class="table-primary">
+                          <th>
+                            #
+                          </th>
+                          <th>
+                            물품
+                          </th>
+						  <th>
+                             경매일
+                           </th>
+                          <th class="ti-heart text-danger"> 위시
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr th:each=" dto, iterStat : ${wishList}" th:if="${iterStat.index < 10}">
+                          <td th:text="${iterStat.index + 1}"></td>
+						  <!--<td><a th:href="@{/bid-detail/{id}(id=${dto.id})}" th:text="${dto.name}"></a></td>-->
+						  <td>
+				              <a th:href="@{${dto.startTime} > ${currentTime} ? '#': '/bid-detail/' + ${dto.id}}"
+				                 th:text="${dto.name}"
+				                 th:classappend="${dto.startTime > currentTime ? 'disabled' : ''}">
+				              </a>
+				          </td>
+                          <td th:text="${#temporals.format(dto.startTime, 'yyyy-MM-dd')}"></td>
+                          <td th:text="${dto.wishCount}"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <th:block th:insert="~{admin/inc/footer.html :: footer}"></th:block>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+	<th:block th:insert="~{admin/inc/scripts.html :: scripts}"></th:block>
+  
+</body>
+
+</html>

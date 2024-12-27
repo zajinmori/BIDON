@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html 
+xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+	<th:block th:insert="~{admin/inc/head.html :: head}"></th:block>
+</head>
+<body>
+  <div class="container-scroller"> 
+    <!-- partial:partials/_navbar.html -->
+    <!-- 상단 로고 및 프로필바 -->
+    <th:block th:insert="~{admin/inc/navbar.html :: navbar}"></th:block>
+    
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+      <th:block th:insert="~{admin/inc/settings-panel.html :: settings-panel}"></th:block>
+
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+      <!-- 사이드 바 -->
+    <th:block th:insert="~{admin/inc/sidebar.html :: sidebar}"></th:block>
+
+
+
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="home-tab">
+                <div class="d-sm-flex align-items-center justify-content-between border-bottom">
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active ps-0" id="home-tab" data-bs-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
+                    </li>
+
+                  </ul>
+                  <div>
+                    <div class="btn-wrapper">
+                      <a href="#" class="btn btn-otline-dark align-items-center"><i class="icon-share"></i> Share</a>
+                      <a href="#" class="btn btn-otline-dark"><i class="icon-printer"></i> Print</a>
+                      <a href="#" class="btn btn-primary text-white me-0"><i class="icon-download"></i> Export</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-content tab-content-basic">
+                  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="statistics-details d-flex align-items-center justify-content-between">
+                          <div>
+                            <p class="statistics-title">전체 회원 수</p>
+                            <h3 class="rate-percentage" th:text="${userCount}-9"></h3>
+							<p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+0.1%</span></p>
+                            <!--<p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span th:text="${#numbers.formatDecimal((newUserCount / (userCount - 9 - newUserCount)) * 100, 1)} + ' POINT'"></span></p>-->
+                          </div>
+                          <div>
+                            <p class="statistics-title">신규 회원 수</p>
+                            <h3 class="rate-percentage" th:text="${newUserCount}"></h3>
+                            <p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+0.1%</span></p>
+                          </div>
+                          <div>
+                            <p class="statistics-title">총 경매 물품 수</p>
+                            <h3 class="rate-percentage" th:text="${normalItemCount}+${liveItemCount}"></h3>
+                            <p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+11</span></p>
+                          </div>
+                          <div class="d-none d-md-block">
+                            <p class="statistics-title">진행 중인 경매 물품 수</p>
+                            <h3 class="rate-percentage" th:text="${ongoingNormalItemCount}+${ongoingLiveItemCount}"></h3>
+                            <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>-3</span></p>
+                          </div>
+                          <div class="d-none d-md-block">
+                            <p class="statistics-title">총 낙찰 물품 수</p>
+                            <h3 class="rate-percentage" th:text="${totalWinningBidCount}"></h3>
+                            <p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+3</span></p>
+                          </div>
+                          <div class="d-none d-md-block">
+                            <p class="statistics-title">총 수수료 수익률</p>
+                            <h3 class="rate-percentage" th:text="${#numbers.formatInteger(totalBidPrice*0.1, 1, 'COMMA')}"></h3>
+                            <p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+0.8%</span></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-8 d-flex flex-column">
+                        <div class="row flex-grow">
+                          <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="d-sm-flex justify-content-between align-items-start">
+                                  <div>
+                                   <h4 class="card-title card-title-dash">월별 기존 회원 수 대비 신규 가입자 수 추이</h4>
+                                    <p class="card-subtitle card-subtitle-dash">해당 그래프는 매월 기존 회원 수와 신규 가입자 수의 변화 양상을 비교하여 보여줍니다.</p>
+                                  </div>
+                                  <div id="performance-line-legend"></div>
+                                </div>
+                                <div class="chartjs-wrapper mt-5">
+                                  <canvas id="performaneLine"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-4 d-flex flex-column">
+                        <div class="row flex-grow">
+                          <div class="col-md-6 col-lg-12 grid-margin stretch-card">
+                            <div class="card bg-primary card-rounded">
+                              <div class="card-body pb-0">
+                                <h4 class="card-title card-title-dash text-white mb-4">현재 경매 진행 상황</h4>
+                                <div class="row">
+                                  <div class="col-sm-4">
+                                    <p class="status-summary-ight-white mb-1">경매 참여자 수</p>
+                                    <h2 class="text-info" th:text="${bidEnterUserCount}"></h2>
+                                  </div>
+                                  <div class="col-sm-8">
+                                    <div class="status-summary-chart-wrapper pb-4">
+                                      <canvas id="status-summary"></canvas>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6 col-lg-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <div class="d-flex justify-content-between align-items-center mb-2 mb-sm-0">
+                                      <div class="circle-progress-width">
+                                        <div id="totalVisitors" class="progressbar-js-circle pr-2"></div>
+                                      </div>
+                                      <div>
+                                        <p class="text-small mb-2">총 방문자 수</p>
+                                        <h4 class="mb-0 fw-bold">2,680</h4>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                      <div class="circle-progress-width">
+                                        <div id="visitperday" class="progressbar-js-circle pr-2"></div>
+                                      </div>
+                                      <div>
+                                        <p class="text-small mb-2">오늘 방문자 수</p>
+                                        <h4 class="mb-0 fw-bold">30</h4>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-4 d-flex flex-column">
+
+
+                        <!--                       작은 원형 도넛 그래프 -->
+                        <div class="row flex-grow">
+                          <div class="col-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="d-flex justify-content-between align-items-center mb-3">
+											<h4 class="card-title card-title-dash">카테고리별 물품수</h4>
+											<div>
+												<div class="dropdown">
+													<button class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button"
+														id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+														전자제품
+													</button>
+													<div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+														<h6 class="dropdown-header">카테고리</h6>
+														<a class="dropdown-item" href="#">전자제품</a>
+														<a class="dropdown-item" href="#">스포츠</a>
+														<a class="dropdown-item" href="#">패션</a>
+														<a class="dropdown-item" href="#">예술</a>
+														<a class="dropdown-item" href="#">자동차</a>
+														<a class="dropdown-item" href="#">미용</a>
+													</div>
+												</div>
+											</div>
+										</div>
+								
+										<canvas class="my-auto" id="doughnutChart" height="200"></canvas>
+										<div id="doughnut-chart-legend" class="mt-5 text-center"></div>
+									</div>
+								</div>
+								</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!--                        작은 막대 그래프 -->
+                        <div class="row flex-grow">
+                          <div class="col-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="row">
+								<div class="col-lg-12">
+									<div class="d-flex justify-content-between align-items-center mb-3">
+										<div>
+											<h4 class="card-title card-title-dash">일반 경매 총 수익</h4>
+										</div>
+										<div>
+											<div class="dropdown">
+												<button class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button"
+													id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+													Quarterly </button>
+												<div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+													<h6 class="dropdown-header">Quarterly</h6>
+													<a class="dropdown-item" href="#">Q1 (Jan-Mar)</a>
+													<a class="dropdown-item" href="#">Q2 (Apr-Jun)</a>
+													<a class="dropdown-item" href="#">Q3 (Jul-Sep)</a>
+													<a class="dropdown-item" href="#">Q4 (Oct-Dec)</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="mt-3">
+										<canvas id="leaveReport"></canvas>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row flex-grow">
+                          <div class="col-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                      <div>
+                                        <h4 class="card-title card-title-dash">실시간 경매 총 수익</h4>
+                                      </div>
+                                      <div>
+                                        <div class="dropdown">
+                                          <button class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Quarterly </button>
+                                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                                            <h6 class="dropdown-header">Quarterly</h6>
+                                            <a class="dropdown-item" href="#">Q1 (Jan-Mar)</a>
+                                            <a class="dropdown-item" href="#">Q2 (Apr-Jun)</a>
+                                            <a class="dropdown-item" href="#">Q3 (Jul-Sep)</a>
+                                            <a class="dropdown-item" href="#">Q4 (Oct-Dec)</a>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="mt-3">
+                                      <canvas id="leaveReport-dark" width="300" height="150"></canvas>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                      </div>
+                      <div class="col-lg-8 d-flex flex-column">
+
+<!--                        큰 막대 그래프 -->
+                        <div class="row flex-grow">
+                          <div class="col-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="d-sm-flex justify-content-between align-items-start">
+                                  <div>
+                                    <h4 class="card-title card-title-dash">경매 성과 분석</h4>
+                                   <p class="card-subtitle card-subtitle-dash">평균 경매 시작 가격 대비 종료 가격을 분석합니다. 아래 금액은 평균 낙찰 가격을 나타냅니다.</p>
+                                  </div>
+                                  <div>
+                                    <div class="dropdown">
+                                      <button class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 2024 </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                        <h6 class="dropdown-header">Year</h6>
+                                        <a class="dropdown-item" href="#">2024</a>
+                                        <a class="dropdown-item" href="#">2025</a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="d-sm-flex align-items-center mt-1 justify-content-between">
+                                  <div class="d-sm-flex align-items-center mt-4 justify-content-between"><h2 class="me-2 fw-bold" th:text="${#numbers.formatDecimal(averageBidPrice, 0, 'COMMA', 2, 'POINT')}"></h2>
+									<h4 class="me-2">KRW</h4><h4 class="text-success">(+1.37%)</h4></div>
+                                  <div class="me-3"><div id="marketing-overview-legend"></div></div>
+                                </div>
+                                <div class="chartjs-bar-wrapper mt-3">
+                                  <canvas id="marketingOverview"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row flex-grow">
+                          <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="d-sm-flex justify-content-between align-items-start">
+                                  <div>
+                                    <h4 class="card-title card-title-dash">경매 물품 분석</h4>
+                                    <p class="card-subtitle card-subtitle-dash">각 유형별 총 등록된 물품 수, 진행중인 경매 물품 수, 종료된 경매 물품 수를 그래프로 보여줍니다.</p>
+                                  </div>
+                                    <div id="auction-item-legend" style="flex-grow: 1;"></div>
+                                </div>
+                                <div class="chartjs-wrapper mt-5">
+                                  <canvas id="auction-item-analysis-chart" width="850" height="150"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row flex-grow">
+                          <div class="col-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="d-sm-flex justify-content-between align-items-start">
+                                  <div>
+                                    <h4 class="card-title card-title-dash">수익분석</h4>
+                                    <p class="card-subtitle card-subtitle-dash">아래 그래프는 모든 낙찰 물품의 10% 수수료를 계산하여 집계하고, 월별 누적 수익금액을 확인 할 수 있다.</p>
+                                  </div>
+                                  <div>
+									<div class="dropdown">
+										<button class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button"
+											id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 2024 </button>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+											<h6 class="dropdown-header">Year</h6>
+											<a class="dropdown-item" href="#">2024</a>
+											<a class="dropdown-item" href="#">2025</a>
+										</div>
+									</div>
+									</div>
+									</div>
+                                <div class="d-sm-flex align-items-center mt-1 justify-content-between">
+                                  <div class="d-sm-flex align-items-center mt-4 justify-content-between"><h2 class="me-2 fw-bold"th:text="${#numbers.formatInteger(totalBidPrice*0.1, 1, 'COMMA')}"></h2><h4 class="me-2">KRW</h4><h4 class="text-success">(+1.37%)</h4></div>
+                                  <div class="me-3"> <div id="revenue-legend" class="mt-5 text-center"></div></div>
+                                </div>
+                                <div class="chartjs-bar-wrapper mt-3">
+                                  <canvas id="revenue-analysis-chart" width="850" height="150"></canvas>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        </div>
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <th:block th:insert="~{admin/inc/footer.html :: footer}"></th:block>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      var monthlyNewUserCounts = /*[[${monthlyNewUserCounts}]]*/ [];
+      var monthlyExistingUserCounts = /*[[${monthlyExistingUserCounts}]]*/ [];
+      var monthlyUserCountList = /*[[${monthlyUserCountList}]]*/ [];
+	  
+	  var registeredCount = /*[[${registeredCount}]]*/ [];
+	  var ongoingCount = /*[[${ongoingCount}]]*/ [];
+	  var endCount = /*[[${endCount}]]*/ [];
+	  
+	  var totalRevenue = /*[[${totalRevenue}]]*/ [];
+	  var cumulativeTotalRevenue = /*[[${cumulativeTotalRevenue}]]*/ [];
+	  
+	  var monthlyAverageStartPrice = /*[[${monthlyAverageStartPrice}]]*/ [];
+	  var monthlyAverageBidPrice = /*[[${monthlyAverageBidPrice}]]*/ [];
+	  /*]]>*/
+	  
+	  var categoryNames = /*[[${categoryNames}]]*/ [];
+	  var categoryCounts = /*[[${categoryCounts}]]*/ [];
+	  
+	  var quarterlyNormalRevenue = /*[[${quarterlyNormalRevenue}]]*/ [];
+	  var quarterlyLiveRevenue = /*[[${quarterlyLiveRevenue}]]*/ [];
+	</script>
+	
+	<th:block th:insert="~{admin/inc/scripts.html :: scripts}"></th:block>
+</body>
+
+</html>
+

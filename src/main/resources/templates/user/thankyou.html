@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <th:block th:insert="~{user/inc/head.html :: head(title='Thank You')}"></th:block>
+    <link rel="stylesheet" href="/css/home.css" type="text/css">
+</head>
+
+<body>
+
+<th:block th:insert="~{user/inc/header.html :: header}"></th:block>
+
+<div class="win-wrapper text-center" id="win-wrapper" style="background-image: url('/images/model-bg.svg')">
+    <div class="px-3">
+        <div class="winner-block">
+            <img src="/user/images/sample/deal.svg" alt="deal-done">
+            <h2>감사합니다!!</h2>
+            <p>입력한 이메일 주소로 확인 메일이 발송 됩니다! 더 많은 물건을 둘러보세요!!</p>
+            <div class="product-card-wrapper text-start d-flex flex-column">
+                <div class="d-sm-flex align-items-center gap-2">
+                    <div class="mb-2 mb-sm-0">
+                        <img th:src="${item.itemMainImagePath}" alt="경매품 이미지" class="product-img">
+                    </div>
+                    <h5 class="fw-bold line-clamp line-clamp-2" th:text="${item.itemName}"></h5>
+                </div>
+                <hr class="opacity-25">
+                <div class="row gy-3">
+                    <div class="col-lg-6">
+                        <h6 class="mb-1">배송 예정일</h6>
+                        <p class="fw-light m-0" id="deliveryDate"></p>
+                    </div>
+                    <div class="col-lg-6">
+                        <h6 class="mb-1">배송지 주소</h6>
+                        <p class="fw-light m-0">[[${item.orderDetailAddress}]], [[${item.orderAddress}]], [[${item.orderDistrict}]], [[${item.orderCity}]], [[${item.orderCountry}]]</p>
+                    </div>
+                </div>
+            </div>
+            <a href="/dashboard" class="primary-btn d-inline-block mt-4">대시보드로 가기</a>
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="~{user/inc/footer.html :: footer}"></th:block>
+<th:block th:insert="~{user/inc/scripts.html :: scripts(jquery=true, custom=true, dayjs=true)}"></th:block>
+<script th:inline="javascript">
+    const item = [[${item}]];
+</script>
+<script src="/js/thankyou.js"></script>
+</body>
+
+</html>

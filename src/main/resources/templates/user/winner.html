@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <th:block th:insert="~{user/inc/head.html :: head(title='Winner')}"></th:block>
+    <link rel="stylesheet" href="/css/home.css" type="text/css">
+</head>
+
+<body>
+<th:block th:insert="~{user/inc/preloader.html :: preloader}"></th:block>
+
+<div class="toggle-theme d-none">
+    <input type="checkbox" class="changeTheme" id="changeTheme">
+    <label for="changeTheme" class="m-auto"></label>
+</div>
+<div class="win-wrapper text-center" id="win-wrapper"
+     style="background-image: url('/images/model-bg.svg')">
+    <div class="px-3">
+        <div class="winner-block">
+            <img src="/user/images/sample/winner.svg" alt="winner">
+            <h2>축하합니다!</h2>
+            <p>물품을 낙찰받는 데 성공하셨습니다! <br>
+                낙찰 확인을 위해 결제를 진행해 주세요.</p>
+            <a id="go-payment" class="primary-btn d-inline-block mb-3">결제 정보 입력하기</a>
+            <p class="text-danger">72시간 내에 결제가 진행되어야 물품을 받으실 수 있습니다.</p>
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="~{user/inc/scripts.html :: scripts(jquery=true, custom=true)}"></th:block>
+
+<script th:inline="javascript">
+    const count = [[${winningBidCount}]];
+
+    if (!count) {
+        alert("해당 경매품에 대한 낙찰 정보가 없습니다.");
+        location.href = "/";
+    }
+</script>
+<script src="/js/winner.js"></script>
+</body>
+
+</html>

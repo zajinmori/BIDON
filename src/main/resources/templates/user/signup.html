@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <th:block th:insert="~{user/inc/head.html :: head(title='Sign Up')}"></th:block>
+	<link rel="stylesheet" href="/user/css/user.css">
+</head>
+
+<body>
+<th:block th:insert="~{user/inc/preloader.html :: preloader}"></th:block>
+
+<div class="toggle-theme d-none">
+    <input type="checkbox" class="changeTheme" id="changeTheme">
+    <label for="changeTheme" class="m-auto"></label>
+</div>
+<div class="login-wrapper" id="login-wrapper" style="background-image: url('user/images/sample/login-bg.svg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="form-wrapper text-center">
+                    <a class="d-inline-block mb-2" href="home">
+                        <img src="/user/images/sample/auction-fevicon.png" class="themeLogo img-fluid" alt="logo">
+                    </a>
+                    <h2 class="display-6 fw-bold mb-3">회원가입</h2>
+                    <p class="mb-4">BidOn 계정 생성을 위해 회원 정보를 입력해주세요.</p>
+                    <form id="signupForm" method="POST" enctype="multipart/form-data">
+                        <div class="row">
+							<div class="col-12">
+									<img id="profilePreview" class="defaultprofile" src="user/images/default-profile.svg" alt="기본프로필">
+							    <div class="form-group">
+							        <label>프로필</label>
+									<input type="file" id="profileImage" name="profile" accept="image/*" class="form-control mt-2">
+							    </div>
+							</div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>이메일*</label>
+                                    <input type="email" id="userEmail" name="email" class="form-control" placeholder="name@mail.com" required>
+									<div class="invalid-feedback">올바른 이메일 주소를 입력해주세요.</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group formPassword">
+                                    <label>비밀번호*</label>
+                                    <input type="password" id="userPassword" name="password" class="form-control" placeholder="****" required>
+                                    <span class="input-checker password-show-hide"><i
+                                            class="fa-regular fa-eye-slash"></i></span>
+									<div class="invalid-feedback">비밀번호를 입력해주세요.</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group formPassword">
+                                    <label>비밀번호 확인*</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="****" required>
+                                    <span class="input-checker"><i class="fa-regular fa-eye-slash"></i></span>
+									<div class="invalid-feedback">비밀번호가 일치하지 않습니다.</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>이름*</label>
+                                    <input type="text" id="userName" name="name" class="form-control" required>
+									<div class="invalid-feedback">이름을 입력해주세요.</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>생년월일</label>
+                                    <input type="date" id="birth" name="birth" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>전화번호</label>
+                                    <input type="text" id="usertel" name="tel" class="form-control">
+                                </div>
+                            </div>
+							<div class="col-12">
+							   <div class="form-group">
+							   	    <label for="countrySelect">국가</label>
+							    	<select class="form-select form-control" id="countrySelect" name="national">
+							        	<option value="">국가 선택</option>
+							        </select>
+							   </div>
+							</div>
+							<!-- role을 hidden으로 추가 -->
+							<input type="hidden" name="userRole" value="ROLE_USER">
+                            <div class="col-12">
+                                <div class="form-check text-start">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                           required>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        나는 <b>이용 약관</b>과 <b>개인정보 처리 방침</b>을 전부 숙지했습니다.
+                                    </label>
+									<div class="invalid-feedback">약관에 동의해주세요.</div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4">
+                                <button class="primary-btn w-100" type="submit" id="signupBtn">가입하기</button>
+                            </div>
+                            <p>이미 계정이 있으신가요? <a href="login">지금 로그인 하러 가세요!</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="~{user/inc/scripts.html :: scripts(jquery=true, custom=true)}"></th:block>
+<script th:src="@{/user/js/signup.js}"></script>
+</body>
+
+</html>

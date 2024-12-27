@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <th:block th:insert="~{user/inc/head.html :: head(title='Browse-Live-Bid')}"></th:block>	
+    
+    <style>
+    	
+    </style>
+    
+</head>
+
+<body>
+
+<th:block th:insert="~{user/inc/header.html :: header}"></th:block>
+
+<main id="main-content" class="position-relative">
+    <div class="breadcrumb-main">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="home">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">실시간 경매</li>
+                </ol>
+                <h1 class="breadcrumb-title">실시간 경매 물품을 확인할 수 있습니다.</h1>
+            </div>
+        </div>
+    </div>
+    <section class="outer-gap">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-xl-3">
+                    <button class="primary-btn d-xl-none mb-3" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#auction-filter-collapse" aria-expanded="false"
+                            aria-controls="auction-filter-collapse">
+                        filter product
+                    </button>
+                    <div class="collapse d-xl-block" id="auction-filter-collapse">
+                        <div class="row gy-4">
+                            <div class="col-sm-6 col-xl-12">
+                                <div class="auction-wrapper p-3">
+                                    <div class="auction-search">
+                                        <input type="search" class="form-control" placeholder="Search">
+                                        <button class=""><i class="fa-solid fa-magnifying-glass"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-12">
+                                <div class="auction-wrapper p-3">
+									<form id="sortForm" action="/live-auction/list" method="get">
+                                    <select name="shorting" class="form-control bg-transparent border-0" onchange="document.getElementById('sortForm').submit()">
+                                        <option value="newArrivals" th:selected="${sorting == 'newArrivals'}">시작 임박 경매 상품</option>
+                                        <option value="startPriceAsc" th:selected="${sorting == 'startPriceAsc'}">가격 낮은 순</option>
+                                        <option value="startPriceDesc" th:selected="${sorting == 'startPriceDesc'}">가격 높은 순</option>
+                                    </select>
+									
+									</form>
+                                </div>
+                            </div>
+                           
+                           
+                            <div class="col-sm-6 col-xl-12">
+                                <div class="auction-wrapper">
+                                    <h4 class="mb-3">경매가 필터</h4>
+                                    <div class="filter-price">
+                                        <div class="price-field">
+											<input type="range" min="100000" max="5000000" value="100000" step="100000" id="lower">
+											<input type="range" min="100000" max="5000000" value="5000000" step="100000" id="upper">
+											         </div>
+											         <div class="price-wrap">
+											             <div class="price-wrap-1">
+											                 <input id="one" readonly>
+											                 <label for="one"></label>
+											             </div>
+											             <div class="price-wrap-2">
+											                 <input id="two" readonly>
+											                 <label for="two">&#x20A9;</label>
+											             </div>
+											         </div>
+											     </div>
+											<input type="hidden" name="minPrice" id="hiddenMinPrice">
+											<input type="hidden" name="maxPrice" id="hiddenMaxPrice">
+											     <button type="submit" class="primary-btn small-btn throwServer">적용</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-9">
+                    <div class="auction-card-small swiper">
+                        <div class="row gy-4 justify-content-center swiper-wrapper">
+                            <div class="col-sm-6 col-lg-4 " th:each="LiveItem : ${liveItemList}">
+                                <div class="auction-card">
+                                    <div class="card-image">
+                                        <img th:src="${LiveItem.path}" alt="auction-card-img">
+                                        <div class="timer-wrapper">
+                                            <div class="timer-inner" th:text="${LiveItem.startTime}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="card-content">
+                                        <a th:href="@{'/live-auction/detail?itemId=' + ${LiveItem.id}}"class="card-title" th:text="${LiveItem.name}"></a>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="p-0">시작 경매가: <span class="price" 
+                                    th:attr="data-price=${LiveItem.startPrice}"><span th:text="&#x20A9;+${LiveItem.startPrice}"></span></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            
+                            <div class="col-12">
+                                <nav aria-label="Page navigation"> 
+                                    <ul class="pagination justify-content-center">
+										<!--이전-->
+										 <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'"></li>
+										       <a class="page-link" th:href="@{/live-auction/list(page=${currentPage - 1}, minPrice=${minPrice}, maxPrice=${maxPrice})}" aria-label="Previous">
+										           <span aria-hidden="true">&laquo;</span>
+										       </a>
+										<!--페이지 번호-->	
+										<li class="page-item" th:each="pageNumber : ${pageNumbers}" th:classappend="${pageNumber == currentPage} ? 'active'">
+										       <a class="page-link" th:href="@{/live-auction/list(page=${pageNumber}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+										          th:text="${pageNumber}">1</a>
+										  	</li>
+										                            
+										<!--다음-->
+										   <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+										       <a class="page-link" th:href="@{/live-auction/list(page=${currentPage + 1}, minPrice=${minPrice}, maxPrice=${maxPrice})}" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="outer-gap auction-card-small">
+        <div class="container">
+            <h2 class="section-title">Latest Auctions</h2>
+            <div class="swiper product-swiper px-0">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="auction-card">
+                            <div class="card-image">
+                                <img src="/user/images/sample/recent-auction-1.png" alt="auction-card-img">
+                                <div class="timer-wrapper">
+                                    <div class="timer-inner"></div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <a href="bid-detail-live" class="card-title">Mendinib top violin from best
+                                    artist</a>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="p-0">Current bid <span>589.00$</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="auction-card">
+                            <div class="card-image">
+                                <img src="/user/images/sample/recent-auction-2.png" alt="auction-card-img">
+                                <div class="timer-wrapper">
+                                    <div class="timer-inner"></div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <a href="bid-detail-live" class="card-title">An antique vintage landline
+                                    telephone</a>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="p-0">Current bid <span>589.00$</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="auction-card">
+                            <div class="card-image">
+                                <img src="/user/images/sample/recent-auction-3.png" alt="auction-card-img">
+                                <div class="timer-wrapper">
+                                    <div class="timer-inner"></div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <a href="bid-detail-live" class="card-title">Old baseball bat with ball and
+                                    weathered glove</a>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="p-0">Current bid <span>589.00$</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="auction-card">
+                            <div class="card-image">
+                                <img src="/user/images/sample/recent-auction-4.png" alt="auction-card-img">
+                                <div class="timer-wrapper">
+                                    <div class="timer-inner"></div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <a href="bid-detail-live" class="card-title">Heritage french style home</a>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="p-0">Current bid <span>589.00$</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="auction-card">
+                            <div class="card-image">
+                                <img src="/user/images/sample/recent-auction-5.png" alt="auction-card-img">
+
+                                <div class="timer-wrapper">
+                                    <div class="timer-inner"></div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <a href="bid-detail-live" class="card-title">Arabic old style patterned teapot</a>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="p-0">Current bid <span>589.00$</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="auction-card">
+                            <div class="card-image">
+                                <img src="/user/images/sample/recent-auction-6.png" alt="auction-card-img">
+
+                                <div class="timer-wrapper">
+                                    <div class="timer-inner"></div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <a href="bid-detail-live" class="card-title">Vintage wall clock</a>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="p-0">Current bid <span>589.00$</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<th:block th:insert="~{user/inc/footer.html :: footer}"></th:block>
+<th:block th:insert="~{user/inc/scripts.html :: scripts(all=true)}"></th:block>
+<script src="/user/js/browse-live-bid.js"></script>
+
+<script>
+		document.addEventListener('DOMContentLoaded', function () {
+	    const lower = document.getElementById('lower');
+	    const upper = document.getElementById('upper');
+	    const one = document.getElementById('one');
+	    const two = document.getElementById('two');
+	    const applyButton = document.querySelector('.throwServer');
+		
+		if (isNaN(lower.value) || isNaN(upper.value)) {
+		        lower.value = 100000; // 기본 최소값
+		        upper.value = 5000000; // 기본 최대값
+		    }
+
+	    // URL에서 쿼리 매개변수 읽기
+	    const urlParams = new URLSearchParams(window.location.search);
+	    const minPrice = urlParams.get('minPrice');
+	    const maxPrice = urlParams.get('maxPrice');
+
+	    // 슬라이더 초기값 설정
+	    if (minPrice !== null) {
+	        lower.value = minPrice;
+	        one.value = parseInt(minPrice).toLocaleString(); // 화면 값 업데이트
+	    } else {
+	        one.value = parseInt(lower.value).toLocaleString();
+	    }
+
+	    if (maxPrice !== null) {
+	        upper.value = maxPrice;
+	        two.value = parseInt(maxPrice).toLocaleString(); // 화면 값 업데이트
+	    } else {
+	        two.value = parseInt(upper.value).toLocaleString();
+	    }
+
+	    // 슬라이더 입력 이벤트
+	    lower.addEventListener('input', function () {
+	        if (parseInt(lower.value) > parseInt(upper.value)) {
+	            lower.value = upper.value;
+	        }
+	        one.value = parseInt(lower.value).toLocaleString();
+	    });
+
+	    upper.addEventListener('input', function () {
+	        if (parseInt(upper.value) < parseInt(lower.value)) {
+	            upper.value = lower.value;
+	        }
+	        two.value = parseInt(upper.value).toLocaleString();
+	    });
+
+	    // 적용 버튼 클릭 이벤트
+	    applyButton.addEventListener('click', function () {
+	        const minPrice = lower.value;
+	        const maxPrice = upper.value;
+
+	        console.log(`URL: /live-auction/list?minPrice=${minPrice}&maxPrice=${maxPrice}`);
+	        window.location.href = `/live-auction/list?minPrice=${minPrice}&maxPrice=${maxPrice}`;
+	    });
+
+	    // 디버깅용 로그
+	    console.log("Initialized Min Price:", lower.value);
+	    console.log("Initialized Max Price:", upper.value);
+	});
+	
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Swiper 초기화
+  var swiper = new Swiper('.swiper', {
+    spaceBetween: 32, // 슬라이드 간 간격
+
+    breakpoints: {
+        450: {
+            slidesPerView: 1,
+        }, 768: {
+            slidesPerView: 2,
+        }, 992: {
+            slidesPerView: 3,
+        }, 1400: {
+            slidesPerView: 4,
+        }
+    }
+  });
+
+  // 타이머 초기화
+  document.querySelectorAll('.timer-inner').forEach((timer) => {
+    const startTime = new Date(timer.textContent); // 타임리프에서 전달된 시간
+
+    // 카운트다운 업데이트 함수
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = startTime - now;
+
+      if (diff <= 0) {
+        timer.textContent = "경매가 시작되었습니다!";
+      } else {
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        timer.textContent = `${hours}시간 ${minutes}분 ${seconds}초 남음`;
+      }
+    };
+
+    // 초기 업데이트
+    updateCountdown();
+
+    // 1초마다 업데이트
+    setInterval(updateCountdown, 1000);
+  });
+});
+
+	
+	
+	
+</script>
+
+
+</body>
+
+</html>

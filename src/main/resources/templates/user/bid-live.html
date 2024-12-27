@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <th:block th:insert="~{user/inc/head.html :: head(title='Bid Live')}"></th:block>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/user/css/bid-live.css" type="text/css">
+</head>
+
+<body>
+<div class="container">
+    <div class="content container-fluid bootstrap snippets bootdey">
+        <div class="row row-broken">
+            <div class="col-sm-2 col-xs-12">
+                <div class="decor-default chat flex-wrap" tabindex="5000">
+                    <div class="participants-title">
+                        <h6>현재 참가자 수: <span class="user-count">0</span>명</h6>
+                    </div>
+                    <div class="participants scroll-area">
+                        <div class="chat-users"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-10 col-xs-12 chat flex-wrap" tabindex="5001">
+                <div class="chat-title">
+                    <img class="item-image" th:src="${itemInfo.itemMainImagePath}" alt="경매 상품">
+                    <div class="item-info">
+                        <h2 th:text="${itemInfo.itemName}"></h2>
+                        <p th:text="${itemInfo.description}"></p>
+                        <h3>시작가: <strong th:text="${itemInfo.startPrice}"></strong>원</h3>
+                    </div>
+                </div>
+                <div id="chat-list" class="scroll-area flex-base">
+                    <div class="col-inside-lg decor-default">
+                        <div class="chat-body"></div>
+                    </div>
+                </div>
+                <div class="input-wrap">
+                    <div class="button-add">
+                        <div class="button-wrap">
+                            <button disabled class="bid-button">입찰가격 계산중</button>
+                            <button class="quit-button">입찰 포기</button>
+                        </div>
+                        <span class="bid-time-text">입찰 가능 시간<time class="bid-time">-:--</time></span>
+                    </div>
+                    <div class="answer-add">
+                        <input id="message-input" type="text" placeholder="메시지를 입력해주세요">
+                        <button type="submit" class="send-button">
+                            <i class="fa-solid fa-location-arrow"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="~{user/inc/scripts.html :: scripts(jquery=true, dayjs=true, util=true)}"></th:block>
+<script th:inline="javascript">
+    const itemInfo = [[${itemInfo}]];
+    const myInfo = [[${#authentication.principal}]]['userEntity'];
+</script>
+
+<script src="/user/js/bid-live.js"></script>
+</body>
+</html>

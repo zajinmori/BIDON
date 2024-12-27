@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <th:block th:insert="~{user/inc/head.html :: head(title='Checkout')}"></th:block>
+</head>
+
+<body>
+<th:block th:insert="~{user/inc/header.html :: header}"></th:block>
+
+<main id="main-content" class="position-relative">
+    <div class="breadcrumb-main">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="home">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">배송 정보</li>
+                </ol>
+                <h1 class="breadcrumb-title">상품 상세 & 더보기</h1>
+            </div>
+        </div>
+    </div>
+    <div class="inner-gap">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-8">
+                    <div class="checkout-form-wrapper">
+                        <div class="d-flex flex-wrap justify-content-between mb-3 mb-md-4 gap-2 gap-sm-0">
+                            <h4 class="form-title">배송지 입력</h4>
+                            <a href="bid-detail" class="text-black ms-auto"><i
+                                    class="fa-solid fa-chevron-left me-2"></i>입찰로 돌아가기</a>
+                        </div>
+
+                        <form id="checkoutForm" method="POST">
+                            <div class="form-wrapper">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="firstName">이름*</label>
+                                            <input type="text" id="firstName" name="firstName" class="form-control"
+                                                   placeholder="두한">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="lastName">성*</label>
+                                            <input type="text" id="lastName" name="lastName" class="form-control"
+                                                   placeholder="김">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="email">Email*</label>
+                                            <input type="text" id="email" name="email" class="form-control"
+                                                   placeholder="name@mail.com ">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="phone">전화번호*</label>
+                                            <input type="number" id="phone" name="phone" class="form-control"
+                                                   placeholder="010-1234-5678">
+                                        </div>
+                                    </div>
+                                    <h4 class="form-title mb-4">배송 주소</h4>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="address1">주소 - 1*</label>
+                                            <input type="text" id="address1" name="address1" class="form-control"
+                                                   placeholder="Floor, Street, Suite, etc.">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for="address2">주소 - 2*</label>
+                                            <input type="text" id="address2" name="address2" class="form-control"
+                                                   placeholder="Floor, Street, Suite, etc.">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="zipCode">우편번호*</label>
+                                            <input type="number" id="zipCode" name="zipCode" class="form-control"
+                                                   placeholder="Pin Code">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="district">구*</label>
+                                            <select name="district" id="district" class="form-control">
+                                                <option selected value="강남">강남</option>
+                                                <option value="강북">강북</option>
+                                                <option value="강서">강서</option>
+                                                <option value="강동">강동</option>
+                                                <option value="광진">광진</option>
+                                                <option value="동대문">동대문</option>
+                                                <option value="중구">중구</option>
+                                                <option value="용산">용산</option>
+                                                <option value="마포">마포</option>
+                                                <option value="서대문">서대문</option>
+                                                <option value="성북">성북</option>
+                                                <option value="성동">성동</option>
+                                                <option value="송파">송파</option>
+                                                <option value="양천">양천</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="city">City*</label>
+                                            <select name="city" id="city" class="form-control">
+                                                <option selected value="서울">서울</option>
+                                                <option value="부산">부산</option>
+                                                <option value="인천">인천</option>
+                                                <option value="경기">경기</option>
+                                                <option value="대구">대구</option>
+                                                <option value="광주">광주</option>
+                                                <option value="대전">대전</option>
+                                                <option value="울산">울산</option>
+                                                <option value="강원">강원</option>
+                                                <option value="충북">충북</option>
+                                                <option value="충남">충남</option>
+                                                <option value="전북">전북</option>
+                                                <option value="전남">전남</option>
+                                                <option value="경북">경북</option>
+                                                <option value="경남">경남</option>
+                                                <option value="제주">제주</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="country">국가 / 지역*</label>
+                                            <select name="country" id="country" class="form-control">
+                                                <option selected="selected">KR</option>
+                                                <option value="USA">USA</option>
+                                                <option value="uk">UK</option>
+                                                <option value="aus">AUS</option>
+                                                <option value="nz">NZ</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <h4 class="form-title mb-4">배송 방법</h4>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <div th:each="deliveryMethod : ${deliveryMethods}">
+                                            <div class="form-radio">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="deliveryMethod"
+                                                           th:id="${'deliveryMethod' + deliveryMethod.id}"
+                                                           th:value="${deliveryMethod.id}"
+                                                           th:checked="${deliveryMethod.id == 1}">
+                                                    <label class="form-check-label"
+                                                           th:for="${'deliveryMethod' + deliveryMethod.id}"
+                                                           th:text="${deliveryMethod.method + ' (' + deliveryMethod.getDayCount() + '일)'}">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row gy-4">
+                        <div class="col-lg-12">
+                            <div class="product-card-wrapper checkout-product-wrapper">
+                                <h5 class="fw-bold line-clamp line-clamp-2">[[${item.itemName}]]</h5>
+                                <br>
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <img th:src="${item.itemMainImagePath}" alt="경매품 이미지" class="product-img">
+                                </div>
+                                <h6 class="d-flex justify-content-between py-2"><span class="fw-normal">경매 시작가</span>
+                                    <span class="fw-semibold">[[${item.startPrice}]]원</span>
+                                </h6>
+                                <h6 class="d-flex justify-content-between py-2"><span class="fw-normal">입찰 금액</span>
+                                    <span class="fw-semibold">[[${item.bidPrice}]]원</span>
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="product-card-wrapper">
+                                <h5 class="mb-3">판매자 정보</h5>
+                                <table class="table card-seller-info">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <h6>이름</h6>
+                                        </td>
+                                        <td>
+                                            <p th:text="${item.sellerName}"></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h6>국가</h6>
+                                        </td>
+                                        <td>
+                                            <p th:text="${item.sellerNational}"></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h6>가입일자</h6>
+                                        </td>
+                                        <td>
+                                            <p th:text="${item.sellerJoinDate}"></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h6>Email</h6>
+                                        </td>
+                                        <td>
+                                            <p th:text="${item.sellerEmail}"></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h6>연락처</h6>
+                                        </td>
+                                        <td>
+                                            <p th:text="${item.sellerTel}"></p>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button id="submitBtn" type="submit" class="payment-btn">결제 단계로 이동</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<th:block th:insert="~{user/inc/footer.html :: footer}"></th:block>
+<th:block th:insert="~{user/inc/scripts.html :: scripts(jquery=true, bootstrap=true, custom=true)}"></th:block>
+<script th:inline="javascript">
+    const count = [[${winningBidCount}]];
+    const item = [[${item}]]
+
+    if (!count) {
+        alert("해당 경매품에 대한 낙찰 정보가 없습니다.");
+        location.href = "/";
+    }
+</script>
+<script src="/user/js/checkout.js"></script>
+
+</body>
+
+</html>

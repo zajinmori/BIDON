@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" id="theme" class="light"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <th:block th:insert="~{user/inc/head.html :: head(title='Privacy')}"></th:block>
+</head>
+
+<body>
+<th:block th:insert="~{user/inc/header.html :: header}"></th:block>
+
+<main id="main-content" class="position-relative">
+    <div class="breadcrumb-main">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="home">Home</a></li>
+<<<<<<< Updated upstream
+                    <li class="breadcrumb-item active" aria-current="page">기타 약관</li>
+=======
+                    <li class="breadcrumb-item active" aria-current="page">개인정보 처리 방침</li>
+>>>>>>> Stashed changes
+                </ol>
+                <h1 class="breadcrumb-title">bid-on 개인 정보 보호 정책</h1>
+            </div>
+        </div>
+    </div>
+    <section class="outer-gap">
+        <div class="container">
+            <div class="row">
+                <div class="d-none d-lg-block col-lg-3">
+                    <ul class="privacy-list">
+                        <li>
+                            <a href="#Introduction"><b>소개</b></a>
+                        </li>
+                        <li>
+                            <a href="#Notification"><b>공지사항</b></a>
+                        </li>
+                        <li>
+                            <a href="#CookiesTechnologies"><b>쿠키 및 유사 기술</b></a>
+                        </li>
+                        <li>
+                            <a href="#YourRights"><b>사용자의 권리</b></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-9">
+                    <div class="privacy-content">
+                        <h5 id="Introduction"><b>소개</b></h5>
+							<p>Bid-On에 오신 것을 환영합니다. 저희는 전자제품을 전문으로 하는 신뢰할 수 있는 온라인 경매 플랫폼입니다. 플랫폼을 이용함으로써, 모든 사용자가 안전하고 효율적인 경매 환경을 누릴 수 있도록 마련된 약관을 준수하게 됩니다.</p>
+							
+							<h5 id="Notification"><b>공지사항</b></h5>
+							<p>Bid-On은 투명성과 공정성을 최우선으로 합니다. 플랫폼 이용 시 다음 사항을 숙지하시기 바랍니다:</p>
+							<ul>
+							    <li>경매에 등록된 모든 제품은 정품 확인 절차를 거칩니다.</li>
+							    <li>입찰 전에 제품 정보 및 판매자 정보를 꼼꼼히 확인하시기 바랍니다.</li>
+							    <li>진행 중인 입찰, 낙찰 결과 및 거래 완료에 대한 알림이 신속히 제공됩니다.</li>
+							</ul>
+							
+							<h5 id="CookiesTechnologies"><b>쿠키 및 유사 기술</b></h5>
+							<p>Bid-On은 사용자 경험을 향상시키기 위해 쿠키 및 유사 기술을 사용합니다:</p>
+							<ul>
+							    <li><b>쿠키의 목적:</b> 쿠키는 사용자의 선호도를 저장하고 입찰 활동을 추적하여 개인화된 서비스를 제공합니다.</li>
+							    <li><b>쿠키의 종류:</b> 일부 쿠키는 사이트 기능에 필수적이며, 다른 쿠키는 사용자 행동을 분석하고 서비스를 개선하는 데 사용됩니다.</li>
+							    <li><b>사용자 제어:</b> 브라우저 설정을 통해 쿠키 선호도를 관리할 수 있습니다. 그러나 쿠키를 비활성화하면 일부 기능이 제한될 수 있습니다.</li>
+							</ul>
+							
+							<h5 id="YourRights"><b>사용자의 권리</b></h5>
+							<p>Bid-On 사용자로서 다음과 같은 권리를 보장받습니다:</p>
+							<ul>
+							    <li><b>투명성:</b> 제품, 판매자, 경매 규칙에 대한 상세한 정보를 확인할 수 있습니다.</li>
+							    <li><b>개인정보 보호:</b> 사용자의 개인정보는 저희 개인정보 보호정책에 따라 안전하게 보호됩니다.</li>
+							    <li><b>분쟁 해결:</b> 거래 과정에서 문제가 발생할 경우, 저희 지원팀이 도움을 제공합니다.</li>
+							    <li><b>입찰 철회:</b> 특정 경매 조건에 따라 입찰 종료 전 입찰을 철회할 수 있습니다.</li>
+							</ul>
+							<p>Bid-On의 경매에 참여함으로써, 책임감 있게 활동하고 다른 사용자의 권리를 존중하는 데 동의하게 됩니다. 저희는 모든 사용자가 원활한 서비스를 누릴 수 있도록 최선을 다하겠습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<th:block th:insert="~{user/inc/footer.html :: footer}"></th:block>
+<th:block th:insert="~{user/inc/scripts.html :: scripts(jquery=true, bootstrap=true, custom=true)}"></th:block>
+</body>
+
+</html>
