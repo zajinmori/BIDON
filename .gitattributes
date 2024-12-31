@@ -3,5 +3,5 @@
 *.jar binary
 *.html linguist-detectable=false
 *.css linguist-detectable=false
-*.javascript linguist-detectable=false
+*.JavaScript linguist-detectable=false
 *.scss linguist-detectable=false
